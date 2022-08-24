@@ -1,5 +1,5 @@
 
-const {expectRevert} = require("@openzeppelin/test-helpers");
+const {expectRevert,time} = require("@openzeppelin/test-helpers");
 const Voting = artifacts.require('Voting.sol');
 let voting;
 
@@ -53,18 +53,22 @@ contract("Voting", (accounts) =>{
 
     })
 
-    it("should allow oting only once per ballot", async () =>{
-    await voting.createBallot("Dummy", ["one,","two","three"],3,{from:accounts[0]});
-    await voting.vote(0,0,{from:voter1})
-    await expectRevert( voting.vote(0,0,{from:voter1}),"You have already voted for this ballot")
 
-    })
-
-    it("should allow only approved voters to vote", async () =>{
+    it("should not allow voting after the ballot has concluded", async () =>{
         await voting.createBallot("Dummy", ["one,","two","three"],3,{from:accounts[0]});
-        await voting.vote(0,0,{from:voter1})
-        await expectRevert( voting.vote(0,0,{from:voter1}),"You have already voted for this ballot")
+        await time.increase(4000)                                                               // This tool that I used is included in the Oz test helpers
+        await expectRevert(
+            voting.vote(0,0,{from:voter2})
+        ,"Vote for this ballot has ended")
     
     })
-})
+
+
+    it("should show the correct results", async () =>{
+
+    const results = await voting.result(0); 
+    assert(results[0].votes === '1');
+   })
+
+   })
 
