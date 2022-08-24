@@ -16,7 +16,7 @@ contract Voting {
         uint end;
     }
 
-    mapping (uint => Ballot) ballots;                           // a mapping of ballots
+    mapping (uint => Ballot) public ballots;                           // a mapping of ballots
     uint nextBallotId;
     address public admin;
 
