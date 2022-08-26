@@ -1,5 +1,5 @@
 
-const {expectRevert,time} = require("@openzeppelin/test-helpers");
+const {expectRevert,time} = require("@openzeppelin/test-helpers");     // npm install --save-dev @openzeppelin/test-helpers
 const Voting = artifacts.require('Voting.sol');
 let voting;
 
